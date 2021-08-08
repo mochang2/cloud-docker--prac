@@ -1,0 +1,51 @@
+# docker-compose-myapp.yml (rename)
+# docker-compose up: find default file name (-d: daemon, background mode)
+# If my docker-compose's name is not a default name,
+# I must use docker-compose up -f docker-compose-myapp.yml.
+
+# docker-compose down: stop(with rm) docekr ps
+# If I stop with ctrl+c -> stop(without rm)
+# docker-compose stop: stop(without rm)
+# docker-compose start: start(for re-using stopped ps, do not create)
+
+version: "3"
+
+services:
+  # (local) arbitrary service name, can use anything
+  flask:
+    # wait for database running
+    depends_on:
+      - database
+    # web application settings
+    image: nicknicknanameme/flask-eg:1.0
+    ports:
+      - "8000:5000"
+    networks:
+      - my-bob-network
+  
+  database:
+    image: mysql:5.7
+    ports:
+      - "3333:3306"
+    environment:
+      # without password -> mysql does not die after it is created
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    #volumes:
+      #- my-bob-database:/var/lib/mysql
+    networks:
+      - my-bob-network
+
+networks:
+  my-bob-network:
+
+volumes:
+  my-bob-database:
+
+# show logs
+# docker logs -f (ps name)
+# docker-compose logs -f (service name)
+
+# show ps
+# docker-compose ps
+
+# All the opertions I could use with "docker", is compatible with "docker-compose".
